@@ -1,0 +1,5 @@
+server:
+  port: 9100
+
+logging:
+  file: logs/app.log

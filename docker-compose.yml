@@ -1,0 +1,22 @@
+elasticsearch:
+  image: elasticsearch:2.1
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+  volumes_from:
+    - esdata
+kibana:
+  image: kibana:4.3
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch
+logstash:
+  image: logstash:2.1
+  links:
+    - elasticsearch
+  volumes:
+    - /Users/twer/Workspace/elk-spike/config:/config-dir
+    - /Users/twer/Workspace/elk-spike/logs:/logs
+  command: "logstash -f /config-dir/logstash.conf"
+  #tty: true
