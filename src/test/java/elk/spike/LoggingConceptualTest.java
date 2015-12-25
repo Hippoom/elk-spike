@@ -15,7 +15,12 @@ import java.util.UUID;
 public class LoggingConceptualTest {
 
     @Test
-    public void printInfo() {
+    public void printSingleLine() {
         log.info(new ST("Spam: <uuid>").add("uuid", UUID.randomUUID().toString()).render());
+    }
+
+    @Test
+    public void printMultiLine() {
+        log.error(new ST("Error: <uuid>").add("uuid", UUID.randomUUID().toString()).render(), new RuntimeException("Oops.."));
     }
 }
