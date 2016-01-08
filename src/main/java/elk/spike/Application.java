@@ -2,9 +2,9 @@ package elk.spike;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.scaleworks.analytics.mdc.filter.AddXRequestId2MdcFilter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.*;
-import java.io.IOException;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -73,38 +72,11 @@ public class Application {
 
     @Bean
     protected Filter injectLoggingMdcFilter() {
-        return new Filter() {
-
-            @Override
-            public void init(FilterConfig filterConfig) throws ServletException {
-
-            }
-
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                try {
-                    /*
-                    * This code puts the value "request_id" to the Mapped Diagnostic
-                    * context.
-                    */
-                    MDC.put(REQUEST_ID, format("%s", UUID.randomUUID().toString()));
-
-                    chain.doFilter(request, response);
-
-                } finally {
-                    MDC.remove(REQUEST_ID);
-                }
-
-            }
-
-            @Override
-            public void destroy() {
-
-            }
-        };
+        return new AddXRequestId2MdcFilter();
     }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
 }
