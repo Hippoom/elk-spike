@@ -1,7 +1,7 @@
 apply plugin: 'spring-boot'
 
 dependencies {
-    compile project(':mdc-core')
+    compile project(':analytics-mdc-core')
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework:spring-context:${springVersion}"

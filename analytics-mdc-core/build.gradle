@@ -1,0 +1,101 @@
+apply plugin: "jacoco"
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+dependencies {
+    provided 'org.projectlombok:lombok:1.14.8'
+    provided 'javax.servlet:javax.servlet-api:3.1.0'
+    provided 'org.slf4j:slf4j-api:1.7.13'
+
+    testCompile('junit:junit:4.12') {
+        exclude group: 'org.hamcrest'
+    }
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'org.springframework:spring-test:4.2.4.RELEASE'
+    testCompile 'ch.qos.logback:logback-classic:1.1.3'
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}
+
+test.finalizedBy jacocoTestReport
+
+javadoc {
+    classpath = configurations.provided
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+def publishStage() {
+    project.hasProperty('publishStage')? publishStage: false
+}
+
+if (publishStage()) {
+
+    signing {
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
+                pom.project {
+                    groupId rootProject.group
+                    artifactId project.name
+                    version rootProject.version
+
+                    name project.name
+                    packaging 'jar'
+                    description "A library to simplify slf4j MDC usage, see https://github.com/Hippoom/${repositoryName} for more detail."
+                    url "https://github.com/Hippoom/${repositoryName}"
+
+                    scm {
+                        url "scm:git@github.com:Hippoom/${repositoryName}.git"
+                        connection "scm:git@github.com:Hippoom/${repositoryName}.git"
+                        developerConnection "scm:git@github.com:Hippoom/${repositoryName}.git"
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache License 2.0'
+                            url "https://github.com/Hippoom/${repositoryName}/blob/master/LICENSE"
+                            //       Distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'hippoom'
+                            name 'Yugang Zhou'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
