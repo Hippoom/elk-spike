@@ -59,11 +59,11 @@ public class AddXRequestId2MdcFilterShould {
         requestIdHasBeenClearedFromMdcAfterFilterCompletion();
     }
 
-    private Matcher<Object> randomUuid() {
-        return notNullValue();
+    private Matcher<String> randomUuid() {
+        return not(nullValue(String.class));
     }
 
-    private void requestIdWasAddedToMdcWithValue(Matcher matcher) {
+    private void requestIdWasAddedToMdcWithValue(Matcher<String> matcher) {
         assertThat(subject.getValuePut(), matcher);
     }
 
