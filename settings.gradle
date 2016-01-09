@@ -1,0 +1,3 @@
+rootProject.name = 'scaleworks-analytics-eco'
+include ':sample', ':mdc-core'
+

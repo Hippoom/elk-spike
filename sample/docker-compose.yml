@@ -3,8 +3,6 @@ elasticsearch:
   ports:
     - "9200:9200"
     - "9300:9300"
-  volumes_from:
-    - esdata
 kibana:
   image: kibana:4.3
   ports:
@@ -16,7 +14,6 @@ logstash:
   links:
     - elasticsearch
   volumes:
-    - /Users/twer/Workspace/elk-spike/config:/config-dir
-    - /Users/twer/Workspace/elk-spike/logs:/logs
+    - ${WORKSPACE}/config:/config-dir
+    - ${WORKSPACE}/logs:/logs
   command: "logstash -f /config-dir/logstash.conf"
-  #tty: true

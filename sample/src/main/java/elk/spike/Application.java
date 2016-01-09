@@ -26,12 +26,10 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @SpringBootApplication
 public class Application {
 
-    public static final String REQUEST_ID = "REQ_ID";
-
     @RequestMapping("/hello")
     protected String hello() {
         startToPrepareGreeting();
-        finsihToPrepareGreeting();
+        finishToPrepareGreeting();
         return "hello";
     }
 
@@ -39,7 +37,7 @@ public class Application {
         log.info("Start saying hello");
     }
 
-    private void finsihToPrepareGreeting() {
+    private void finishToPrepareGreeting() {
         throw new RuntimeException("Oops");
     }
 

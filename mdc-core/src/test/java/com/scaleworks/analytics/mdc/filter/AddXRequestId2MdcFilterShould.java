@@ -36,7 +36,7 @@ public class AddXRequestId2MdcFilterShould {
 
     @Test
     public void addXRequestIdFromHttpHeaderToMDC_whenRequestInComing() throws IOException, ServletException {
-        assertXRequestIsNotInMdc();
+        requestIsNotInMdc();
 
         String reqId = "a unique string";
 
@@ -44,34 +44,34 @@ public class AddXRequestId2MdcFilterShould {
 
         subject.doFilter(request, response, filterChain);
 
-        assertXRequestIdWasAddedToMdcWithValue(equalTo(reqId));
-        assertXRequestHasBeenClearedFromMdcAfterFilterCompletion();
+        requestIdWasAddedToMdcWithValue(equalTo(reqId));
+        requestIdHasBeenClearedFromMdcAfterFilterCompletion();
     }
 
 
     @Test
     public void generateXRequestIdToMDC_whenRequestInComing_givenXRequestIdIsAbsentInHttpHeader() throws IOException, ServletException {
-        assertXRequestIsNotInMdc();
+        requestIsNotInMdc();
 
         subject.doFilter(request, response, filterChain);
 
-        assertXRequestIdWasAddedToMdcWithValue(randomUuid());
-        assertXRequestHasBeenClearedFromMdcAfterFilterCompletion();
+        requestIdWasAddedToMdcWithValue(randomUuid());
+        requestIdHasBeenClearedFromMdcAfterFilterCompletion();
     }
 
     private Matcher<Object> randomUuid() {
         return notNullValue();
     }
 
-    private void assertXRequestIdWasAddedToMdcWithValue(Matcher matcher) {
+    private void requestIdWasAddedToMdcWithValue(Matcher matcher) {
         assertThat(subject.getValuePut(), matcher);
     }
 
-    private void assertXRequestHasBeenClearedFromMdcAfterFilterCompletion() {
-        assertXRequestIsNotInMdc();
+    private void requestIdHasBeenClearedFromMdcAfterFilterCompletion() {
+        requestIsNotInMdc();
     }
 
-    private void assertXRequestIsNotInMdc() {
+    private void requestIsNotInMdc() {
         assertThat(MDC.get(X_REQUEST_ID), is(nullValue()));
     }
 
