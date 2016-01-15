@@ -46,6 +46,8 @@ public class AddXRequestId2MdcFilterShould {
 
         requestIdWasAddedToMdcWithValue(equalTo(reqId));
         requestIdHasBeenClearedFromMdcAfterFilterCompletion();
+
+        assertThat(response.getHeader(X_REQUEST_ID), is(reqId));
     }
 
 
@@ -57,6 +59,7 @@ public class AddXRequestId2MdcFilterShould {
 
         requestIdWasAddedToMdcWithValue(randomUuid());
         requestIdHasBeenClearedFromMdcAfterFilterCompletion();
+        assertThat(response.getHeader(X_REQUEST_ID), is(randomUuid()));
     }
 
     private Matcher<String> randomUuid() {

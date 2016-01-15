@@ -1,5 +1,9 @@
 server:
-  port: 9100
+  port: 11001
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: logs
 
 logging:
   file: logs/app.log
