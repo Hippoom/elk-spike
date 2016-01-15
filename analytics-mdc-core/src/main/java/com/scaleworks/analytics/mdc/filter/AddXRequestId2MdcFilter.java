@@ -4,6 +4,7 @@ import org.slf4j.MDC;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -19,9 +20,13 @@ public class AddXRequestId2MdcFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
         try {
-            MDC.put(X_REQUEST_ID, getXRequestIdFrom(req));
+            String xRequestId = getXRequestIdFrom(req);
+
+            MDC.put(X_REQUEST_ID, xRequestId);
             postMdcPut();
+            res.setHeader(X_REQUEST_ID, xRequestId);
             chain.doFilter(req, response);
         } finally {
             MDC.remove(X_REQUEST_ID);
